@@ -6,7 +6,7 @@ from pysrt import SubRipTime
 
 #from categorize_en import categorizeText
 
-#from readability import Readability # https://pypi.org/project/py-readability-metrics/
+from readability import Readability # https://pypi.org/project/py-readability-metrics/
 
 from fixEncoding import makeFileUtf8Bom
 from syncSrts import syncSrts
@@ -63,61 +63,64 @@ def joinLines(txtsub1, txtsub2):
     else:
         return txtsub1 + txtsub2
 
-# # Adapted from https://pypi.org/project/py-readability-metrics
-# # That library requires a >= 100 words text and I want to ignore that
-# def calc_flesh_kincade_grade(stats):
-#     return round((0.38 * stats["avg_words_per_sentence"] +
-#             11.8 * stats["avg_syllables_per_word"]) - 15.59)
+# Adapted from https://pypi.org/project/py-readability-metrics
+# That library requires a >= 100 words text and I want to ignore that
+def calcFleshKincadeGrade(stats):
+    return round((0.38 * stats["avg_words_per_sentence"] +
+            11.8 * stats["avg_syllables_per_word"]) - 15.59)
 
-# # Returns true if line difficulty level of this L2 line is ok for the user
-# # Checks line num of chars, flesch-kincaid grade level, CEFR level
-# # Given max levels to check against, disregards max level <= 0 
-# def isTextNotAboveLevel(level, cefr_level, flesh_kincade_grade, num_words, lineLen):
-#     level_criteria = level_criterias[level]
+# Returns true if line difficulty level of this L2 line is ok for the user
+# Checks line num of chars, flesch-kincaid grade level, CEFR level
+# Given max levels to check against, disregards max level <= 0 
+def isTextNotAboveLevel(level, cefr_level, flesh_kincade_grade, num_words, lineLen):
+    level_criteria = level_criterias[level]
 
-#     is_readable = True
-#     if (level_criteria["max_characters"] > 0 and lineLen > level_criteria["max_characters"]):
-#         is_readable = False
-#     if (level_criteria["max_words"] > 0 and num_words > level_criteria["max_words"]):
-#         is_readable = False
-#     if (level_criteria["max_flesh_kincade_grade"] > 0 and flesh_kincade_grade > level_criteria["max_flesh_kincade_grade"]):
-#         is_readable = False
-#     if (level_criteria["max_CEFR_level"] != "" and cefr_level > level_criteria["max_CEFR_level"]):
-#         is_readable = False
+    is_readable = True
+    if (level_criteria["max_characters"] > 0 and lineLen > level_criteria["max_characters"]):
+        is_readable = False
+    if (level_criteria["max_words"] > 0 and num_words > level_criteria["max_words"]):
+        is_readable = False
+    if (level_criteria["max_flesh_kincade_grade"] > 0 and flesh_kincade_grade > level_criteria["max_flesh_kincade_grade"]):
+        is_readable = False
+    if (level_criteria["max_CEFR_level"] != "" and cefr_level > level_criteria["max_CEFR_level"]):
+        is_readable = False
 
-#     # log("{} |{}| Chars: {} | words: {} | F-K Grade: {} | CEFR: {} |".format(
-#     #     "X" if is_readable else "-", 
-#     #     line.replace("\n", " "), 
-#     #     len(line), 
-#     #     str(readability_statistics["num_words"]),
-#     #     str(flesh_kincade_grade),
-#     #     cefr_level) 
-#     # )
-#     return is_readable
+    # log("{} |{}| Chars: {} | words: {} | F-K Grade: {} | CEFR: {} |".format(
+    #     "X" if is_readable else "-", 
+    #     line.replace("\n", " "), 
+    #     len(line), 
+    #     str(readability_statistics["num_words"]),
+    #     str(flesh_kincade_grade),
+    #     cefr_level) 
+    # )
+    return is_readable
 
-# # if the current L2 (i.e. original language) level is not higher than the given level,
-# # filter the current L1 subtitle - i.e. it will not be displayed
-# def processSub(sub_L1, sub_L2, levels, outs, removed_lines, show_L2):
-#     text_L1 = sub_L1.text
-#     text_L2 = sub_L2.text
+# if the current L2 (i.e. original language) level is not higher than the given level,
+# filter the current L1 subtitle - i.e. it will not be displayed
+def processSub(sub_L1, sub_L2, levels, outs, removed_lines, show_L2):
+    text_L1 = sub_L1.text
+    text_L2 = sub_L2.text
 
-#     r = Readability(text_L2)
-#     readability_statistics = r.statistics()
-#     flesh_kincade_grade = calc_flesh_kincade_grade(readability_statistics)
+    r = Readability(text_L2)
+    readability_statistics = r.statistics()
+    flesh_kincade_grade = calcFleshKincadeGrade(readability_statistics)
 
-#     CEFR_cat = categorizeText(text_L2)
-#     cefr_level = CEFR_cat['level']
+    #-CEFR_cat = categorizeText(text_L2)
+    #-cefr_level = CEFR_cat['level']
+    # TBD #
+    cefr_level = "B1"
 
-#     for level in levels:
-#         if (text_L2 is not None) and (len(text_L2) > 0) and isTextNotAboveLevel(level, cefr_level, flesh_kincade_grade, int(readability_statistics["num_words"]), len(text_L2)):
-#             removed_lines[level] = removed_lines[level] + 1            
-#             text = "" if show_L2 == "no" else text_L2
-#         else:
-#             text = joinLines(text_L2, text_L1) if show_L2 == "yes" else text_L1
 
-#         if len(text) > 0:
-#             item = SubRipItem(sub_L2.index, sub_L2.start, sub_L2.end, text)
-#             outs[level].append(item)        
+    for level in levels:
+        if (text_L2 is not None) and (len(text_L2) > 0) and isTextNotAboveLevel(level, cefr_level, flesh_kincade_grade, int(readability_statistics["num_words"]), len(text_L2)):
+            removed_lines[level] = removed_lines[level] + 1            
+            text = "" if show_L2 == "no" else text_L2
+        else:
+            text = joinLines(text_L2, text_L1) if show_L2 == "yes" else text_L1
+
+        if len(text) > 0:
+            item = SubRipItem(sub_L2.index, sub_L2.start, sub_L2.end, text)
+            outs[level].append(item)        
 
 def makeL1L2(L1_srt, L2_srt, out_srt, levels, out_synced_srt, out_L1_utf8bom_srt, out_L2_utf8bom_srt, show_L2, encoding):
     """
@@ -155,21 +158,21 @@ def makeL1L2(L1_srt, L2_srt, out_srt, levels, out_synced_srt, out_L1_utf8bom_srt
     outs = {}
     removed_lines = {}
     out_srts = {}
-    # for level in levels:
-    #     out_srts[level] = out_srt.replace("{{LEVEL}}", level)
-    #     outs[level] = SubRipFile()
-    #     removed_lines[level] = 0
+    for level in levels:
+        out_srts[level] = out_srt.replace("{{LEVEL}}", level)
+        outs[level] = SubRipFile()
+        removed_lines[level] = 0
 
-    # for i in range(0, len(subs_L2)-1):
-    #     processSub(subs_L1[i], subs_L2[i], levels, outs, removed_lines, show_L2)
+    for i in range(0, len(subs_L2)-1):
+        processSub(subs_L1[i], subs_L2[i], levels, outs, removed_lines, show_L2)
 
-    # for level in levels:
-    #     summary = "level_criteria: {}. Hidden L1 lines: {} out of {}".format(level_criterias[level], removed_lines[level], len(subs_L2))
-    #     summaryItem = SubRipItem(1, {'milliseconds': 0}, {'milliseconds': 1}, summary)
-    #     outs[level].append(summaryItem)
-    #     outs[level].clean_indexes()        
-    #     outs[level].save(path=out_srts[level], encoding=encoding)
-    #     log("Saved {}. {} ".format(out_srts[level], summary))
+    for level in levels:
+        summary = "level_criteria: {}. Hidden L1 lines: {} out of {}".format(level_criterias[level], removed_lines[level], len(subs_L2))
+        summaryItem = SubRipItem(1, {'milliseconds': 0}, {'milliseconds': 1}, summary)
+        outs[level].append(summaryItem)
+        outs[level].clean_indexes()        
+        outs[level].save(path=out_srts[level], encoding=encoding)
+        log("Saved {}. {} ".format(out_srts[level], summary))
 
     if (out_L1_utf8bom_srt):
         if os.path.isfile(out_L1_utf8bom_srt):
