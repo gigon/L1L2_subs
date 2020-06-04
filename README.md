@@ -26,6 +26,11 @@ Add --encoding flag to save the result in a specific encoding e.g. "--encoding u
 
 $ python ./src/main.py "/path-to/movie.subs.fr.srt" "/path-to/movie.subs.en.srt" --level 3 --save_sync
 
+## Build an installation
+```
+pipenv run setup.py install
+```
+
 ## Notes
 
 * The two srt files are expected to be synchronized betweem them, to the level of 500 ms.   
@@ -34,4 +39,3 @@ Otherwise the results are unexpected.
 
 * Installation on Windows  
 On windows 10, if textacy fails to install, try to install Win10 Sdk
-

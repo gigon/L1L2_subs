@@ -10,6 +10,7 @@ pysrt = "*"
 py-readability-metrics = "*"
 textblob = "*"
 textacy = "*"
+setuptools = "*"
 
 [requires]
 python_version = "3.8"
