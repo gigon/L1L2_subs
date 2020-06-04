@@ -9,6 +9,7 @@ verify_ssl = true
 pysrt = "*"
 py-readability-metrics = "*"
 textblob = "*"
+textacy = "*"
 
 [requires]
 python_version = "3.8"

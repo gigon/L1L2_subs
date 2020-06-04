@@ -5,7 +5,7 @@ import os
 import sys
 
 from textblob import TextBlob
-## TBD import textacy
+from textacy import preprocessing
 
 # this is a pointer to the module object instance itself.
 this = sys.modules[__name__]
@@ -57,18 +57,15 @@ def getMaxWordLevelForWordsSet(words, cefr_data):
 
 def processText(text):
 
-    preprocessedText = text
-    ## TBD 
-    # preprocessedText = textacy.preprocess_text(
-    #     text,
-    #     no_accents=True,
-    #     no_punct=True,
-    #     lowercase=False,
-    #     fix_unicode=True,
-    #     no_emails=True,
-    #     no_phone_numbers=True,
-    #     no_contractions=True
-    # )
+    preprocessedText = preprocessing.normalize.normalize_unicode(text)
+    preprocessedText = preprocessing.normalize.normalize_quotation_marks(preprocessedText)
+    
+    preprocessedText = preprocessing.remove.remove_accents(preprocessedText)
+    preprocessedText = preprocessing.remove.remove_punctuation(preprocessedText)
+
+    preprocessedText = preprocessing.replace.replace_emails(preprocessedText, "")
+    preprocessedText = preprocessing.replace.replace_phone_numbers(preprocessedText, "")
+    #preprocessedText = preprocessing.replace.replace_contractions(preprocessedText)
 
     # lemmatize the entire text
     # first, split the text to a list of words
@@ -79,5 +76,4 @@ def processText(text):
         lemmatizedText += "{} ".format(w.lemmatize())
 
     # normalize the whitespaces for texts which include s.l. 'Title    And I am ...'
-    ## TBD return textacy.preprocess.normalize_whitespace(lemmatizedText)
-    return lemmatizedText
+    return preprocessing.normalize_whitespace(lemmatizedText)

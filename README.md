@@ -31,3 +31,7 @@ $ python ./src/main.py "/path-to/movie.subs.fr.srt" "/path-to/movie.subs.en.srt"
 * The two srt files are expected to be synchronized betweem them, to the level of 500 ms.   
 Otherwise the results are unexpected.   
 <b>subsync</b> is a good utility to sync two srt files: ([Online Tool](https://subsync.online/en/online.html))  ([Sources on github](https://github.com/sc0ty/subsync))
+
+* Installation on Windows  
+On windows 10, if textacy fails to install, try to install Win10 Sdk
+
