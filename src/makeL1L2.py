@@ -4,7 +4,7 @@ from pysrt import SubRipFile  # https://github.com/byroot/pysrt
 from pysrt import SubRipItem
 from pysrt import SubRipTime
 
-#from categorize_en import categorizeText
+from cefr import getCefrLevel
 
 from readability import Readability # https://pypi.org/project/py-readability-metrics/
 
@@ -105,11 +105,7 @@ def processSub(sub_L1, sub_L2, levels, outs, removed_lines, show_L2):
     readability_statistics = r.statistics()
     flesh_kincade_grade = calcFleshKincadeGrade(readability_statistics)
 
-    #-CEFR_cat = categorizeText(text_L2)
-    #-cefr_level = CEFR_cat['level']
-    # TBD #
-    cefr_level = "B1"
-
+    cefr_level = getCefrLevel(text_L2)
 
     for level in levels:
         if (text_L2 is not None) and (len(text_L2) > 0) and isTextNotAboveLevel(level, cefr_level, flesh_kincade_grade, int(readability_statistics["num_words"]), len(text_L2)):
