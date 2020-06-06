@@ -24,7 +24,7 @@ Add --encoding flag to save the result in a specific encoding e.g. "--encoding u
 
 ## How-to
 
-$ python ./src/main.py "/path-to/movie.subs.fr.srt" "/path-to/movie.subs.en.srt" --level 3 --save_sync
+$ python ./src/main.py "/path-to/movie.subs.fr.srt" "/path-to/movie.subs.en.srt" --level 3,5 --save_sync
 
 ## Build an installation
 ```
@@ -38,4 +38,9 @@ Otherwise the results are unexpected.
 <b>subsync</b> is a good utility to sync two srt files: ([Online Tool](https://subsync.online/en/online.html))  ([Sources on github](https://github.com/sc0ty/subsync))
 
 * Installation on Windows  
-On windows 10, if textacy fails to install, try to install Win10 Sdk
+On windows 10, if textacy fails to install, try to install Win10 Sdk.   
+
+* Run this command (TBD):
+```
+python -m spacy download en_core_web_sm
+```

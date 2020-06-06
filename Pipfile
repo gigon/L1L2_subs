@@ -8,7 +8,6 @@ pylint = "*"
 
 [packages]
 pysrt = "*"
-py-readability-metrics = "*"
 textblob = "*"
 textacy = "*"
 setuptools = "*"

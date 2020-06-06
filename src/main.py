@@ -74,6 +74,10 @@ def main():
 
     args = parser.parse_args()
 
+    if args.L1_srt[0] == args.L2_srt[0]:
+        print("Passed identical input files")
+        sys.exit(1) 
+
     files_exist(args.L1_srt[0], args.L2_srt[0])
        
     levels = []

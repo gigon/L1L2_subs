@@ -4,9 +4,7 @@ from pysrt import SubRipFile  # https://github.com/byroot/pysrt
 from pysrt import SubRipItem
 from pysrt import SubRipTime
 
-from cefr import getCefrLevel
-
-from readability import Readability # https://pypi.org/project/py-readability-metrics/
+from cefr import analyzeSubLevel
 
 from fixEncoding import makeFileUtf8Bom
 from syncSrts import syncSrts
@@ -63,12 +61,6 @@ def joinLines(txtsub1, txtsub2):
     else:
         return txtsub1 + txtsub2
 
-# Adapted from https://pypi.org/project/py-readability-metrics
-# That library requires a >= 100 words text and I want to ignore that
-def calcFleshKincadeGrade(stats):
-    return round((0.38 * stats["avg_words_per_sentence"] +
-            11.8 * stats["avg_syllables_per_word"]) - 15.59)
-
 # Returns true if line difficulty level of this L2 line is ok for the user
 # Checks line num of chars, flesch-kincaid grade level, CEFR level
 # Given max levels to check against, disregards max level <= 0 
@@ -101,14 +93,15 @@ def processSub(sub_L1, sub_L2, levels, outs, removed_lines, show_L2):
     text_L1 = sub_L1.text
     text_L2 = sub_L2.text
 
-    r = Readability(text_L2)
-    readability_statistics = r.statistics()
-    flesh_kincade_grade = calcFleshKincadeGrade(readability_statistics)
-
-    cefr_level = getCefrLevel(text_L2)
+    if (text_L2 is not None) and (len(text_L2) > 0):
+        cefr_level, flesh_kincade_grade, n_words = analyzeSubLevel(text_L2)
+    else:
+        flesh_kincade_grade = ""
+        cefr_level = ""
+        n_words = 0
 
     for level in levels:
-        if (text_L2 is not None) and (len(text_L2) > 0) and isTextNotAboveLevel(level, cefr_level, flesh_kincade_grade, int(readability_statistics["num_words"]), len(text_L2)):
+        if (text_L2 is not None) and (len(text_L2) > 0) and isTextNotAboveLevel(level, cefr_level, flesh_kincade_grade, n_words, len(text_L2)):
             removed_lines[level] = removed_lines[level] + 1            
             text = "" if show_L2 == "no" else text_L2
         else:
