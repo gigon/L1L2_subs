@@ -4,7 +4,7 @@ from pysrt import SubRipFile  # https://github.com/byroot/pysrt
 from pysrt import SubRipItem
 from pysrt import SubRipTime
 
-from cefr import analyzeSubLevel
+from textAnalyse import analyzeSubLevel
 
 from fixEncoding import makeFileUtf8Bom
 from syncSrts import syncSrts
