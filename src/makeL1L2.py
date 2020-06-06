@@ -90,8 +90,8 @@ def isTextNotAboveLevel(level, cefr_level, flesh_kincade_grade, num_words, lineL
 # if the current L2 (i.e. original language) level is not higher than the given level,
 # filter the current L1 subtitle - i.e. it will not be displayed
 def processSub(sub_L1, sub_L2, levels, outs, removed_lines, show_L2):
-    text_L1 = sub_L1.text
-    text_L2 = sub_L2.text
+    text_L1 = sub_L1.text.lstrip()
+    text_L2 = sub_L2.text.lstrip()
 
     if (text_L2 is not None) and (len(text_L2) > 0):
         cefr_level, flesh_kincade_grade, n_words = analyzeSubLevel(text_L2)
@@ -111,10 +111,10 @@ def processSub(sub_L1, sub_L2, levels, outs, removed_lines, show_L2):
             item = SubRipItem(sub_L2.index, sub_L2.start, sub_L2.end, text)
             outs[level].append(item)        
 
-def makeL1L2(L1_srt, L2_srt, out_srt, levels, out_synced_srt, out_L1_utf8bom_srt, out_L2_utf8bom_srt, show_L2, encoding):
+def makeL1L2(L1_srt, L2_srt, out_srt, levels, save_sync, out_L1_utf8bom_srt, out_L2_utf8bom_srt, show_L2, encoding):
     """
     Joins L1_srt and L2_srt subtitles and saves the result to out_srt.
-    If out_synced_srt is not empty, saves the synced L1 srt file to that path.
+    If save_sync is True, saves the synced srt files.
     If out_L1_utf8bom_srt is not empty, saves the L1 srt file converted to utf8-BOM to that path.
     If out_L2_utf8bom_srt is not empty, saves the L2 srt file converted to utf8-BOM to that path.
     """
@@ -123,7 +123,7 @@ def makeL1L2(L1_srt, L2_srt, out_srt, levels, out_synced_srt, out_L1_utf8bom_srt
     log("L2_srt: " + L2_srt)
     log("show_L2: " + show_L2)
     log("encoding: " + encoding)
-    log("out_synced_srt: ", out_synced_srt)
+    log("save_sync: ", save_sync)
     log("out_L1_utf8bom_srt: ", out_L1_utf8bom_srt)
     log("out_L2_utf8bom_srt: ", out_L2_utf8bom_srt)
     log("levels: ", levels)
@@ -136,13 +136,17 @@ def makeL1L2(L1_srt, L2_srt, out_srt, levels, out_synced_srt, out_L1_utf8bom_srt
     makeFileUtf8Bom(L2_srt, L2_srt_bom)
 
     subs_L1_orig = SubRipFile.open(L1_srt_bom)
-    subs_L2 = SubRipFile.open(L2_srt_bom)
+    subs_L2_orig = SubRipFile.open(L2_srt_bom)
 
-    subs_L1, dupes, fixed = syncSrts(subs_L1_orig, subs_L2)
+    subs_L1, dupes, fixed, subs_L2 = syncSrts(subs_L1_orig, subs_L2_orig)
 
-    if out_synced_srt:
-        subs_L1.save(out_synced_srt, encoding=encoding)
-        log("Saved {}. Duplicate lines: {} Fixed: {}".format(out_synced_srt, dupes, fixed))
+    if save_sync:
+        out_synced_L1 = L1_srt.replace(".srt", ".synced.srt")
+        out_synced_L2 = L2_srt.replace(".srt", ".synced.srt")
+
+        subs_L1.save(out_synced_L1, encoding=encoding)
+        subs_L2.save(out_synced_L2, encoding=encoding)
+        log("Saved {} and {}. Duplicate lines: {} Fixed: {}".format(out_synced_L1, out_synced_L2, dupes, fixed))
 
     outs = {}
     removed_lines = {}
@@ -152,7 +156,7 @@ def makeL1L2(L1_srt, L2_srt, out_srt, levels, out_synced_srt, out_L1_utf8bom_srt
         outs[level] = SubRipFile()
         removed_lines[level] = 0
 
-    for i in range(0, len(subs_L2)-1):
+    for i in range(0, len(subs_L2)):
         processSub(subs_L1[i], subs_L2[i], levels, outs, removed_lines, show_L2)
 
     for level in levels:
