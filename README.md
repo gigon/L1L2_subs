@@ -15,6 +15,10 @@ The program first attempts to convert the input srt files to UTF-8-BOM format.
 Add --save-boms flag to save these intermediate files.   
 
 The program then attempts to synchronize the 1st input file (L1) subtitle times to the 2nd file (L2).   
+
+Add --L1_color yellow and L1_size 11 to format the L1 subtitles.
+Add --L2_color yellow and L2_size 11 to format the L2 subtitles.
+
 Add --save-sync flag to save this intermediate file.
 * Note the two input subtitles times must be close enough for this to succeed.   
 If they differ too much, i.e. there is no overlap in may subtitles display times, there will be 

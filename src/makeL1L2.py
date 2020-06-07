@@ -1,3 +1,4 @@
+import sys
 import os    
 
 from pysrt import SubRipFile  # https://github.com/byroot/pysrt
@@ -12,6 +13,10 @@ from syncSrts import syncSrts
 delta = SubRipTime(milliseconds=500)
 encoding = "utf_8"
 
+this = sys.modules[__name__]
+
+this.L1_sub_template = "{}"
+this.L2_sub_template = "{}"
 
 level_criterias = {
     '1': { 
@@ -55,11 +60,30 @@ level_criterias = {
 def log(*values):
     print(values)
 
-def joinLines(txtsub1, txtsub2):
-    if (len(txtsub1) > 0) & (len(txtsub2) > 0):
-        return txtsub1 + '\n' + txtsub2
+def setSrtTemplates(L1_color, L1_size, L2_color, L2_size):
+    if L1_color or L1_size:
+        this.L1_sub_template = "<font"
+        if L1_color:
+            this.L1_sub_template = this.L1_sub_template + " color=\"" + L1_color + "\""
+        if L1_size:
+            this.L1_sub_template = this.L1_sub_template + " size=\"" + L1_size + "\""
+        this.L1_sub_template = this.L1_sub_template + ">{}</font>"
+    if L2_color or L2_size:
+        this.L2_sub_template = "<font"
+        if L2_color:
+            this.L2_sub_template = this.L2_sub_template + " color=\"" + L2_color + "\""
+        if L2_size:
+            this.L2_sub_template = this.L2_sub_template + " size=\"" + L2_size + "\""
+        this.L2_sub_template = this.L2_sub_template + ">{}</font>"
+
+def joinLines(txtsubL2, txtsubL1):
+    formattedL1 = this.L1_sub_template.format(txtsubL1) if len(txtsubL1)>0 else ""
+    formattedL2 = this.L2_sub_template.format(txtsubL2) if len(txtsubL2)>0 else ""
+
+    if (len(formattedL2) > 0) & (len(formattedL1) > 0):
+        return formattedL2 + '\n' + formattedL1
     else:
-        return txtsub1 + txtsub2
+        return formattedL2 + formattedL1
 
 # Returns true if line difficulty level of this L2 line is ok for the user
 # Checks line num of chars, flesch-kincaid grade level, CEFR level
@@ -103,20 +127,22 @@ def processSub(sub_L1, sub_L2, levels, outs, removed_lines, show_L2):
     for level in levels:
         if (text_L2 is not None) and (len(text_L2) > 0) and isTextNotAboveLevel(level, cefr_level, flesh_kincade_grade, n_words, len(text_L2)):
             removed_lines[level] = removed_lines[level] + 1            
-            text = "" if show_L2 == "no" else text_L2
+            text = "" if show_L2 == "no" else this.L2_sub_template.format(text_L2)
         else:
-            text = joinLines(text_L2, text_L1) if show_L2 == "yes" else text_L1
+            text = joinLines(text_L2, text_L1) if show_L2 == "yes" else this.L1_sub_template.format(text_L1)
 
         if len(text) > 0:
             item = SubRipItem(sub_L2.index, sub_L2.start, sub_L2.end, text)
             outs[level].append(item)        
 
-def makeL1L2(L1_srt, L2_srt, out_srt, levels, save_sync, out_L1_utf8bom_srt, out_L2_utf8bom_srt, show_L2, encoding):
+def makeL1L2(L1_srt, L2_srt, out_srt, levels, save_sync, out_L1_utf8bom_srt, out_L2_utf8bom_srt, \
+    show_L2, encoding, L1_color, L1_size, L2_color, L2_size):
     """
     Joins L1_srt and L2_srt subtitles and saves the result to out_srt.
     If save_sync is True, saves the synced srt files.
     If out_L1_utf8bom_srt is not empty, saves the L1 srt file converted to utf8-BOM to that path.
     If out_L2_utf8bom_srt is not empty, saves the L2 srt file converted to utf8-BOM to that path.
+    If L1_color, L1_size, L2_color, L2_size are given, the subs are formatted accordingly
     """
 
     log("L1_srt: " + L1_srt)
@@ -124,9 +150,13 @@ def makeL1L2(L1_srt, L2_srt, out_srt, levels, save_sync, out_L1_utf8bom_srt, out
     log("show_L2: " + show_L2)
     log("encoding: " + encoding)
     log("save_sync: ", save_sync)
+    log("levels: ", levels)
+    log("L1 color: {}, size: {}.".format(L1_color,L1_size))
+    log("L2 color: {}, size: {}.".format(L2_color,L2_size))
     log("out_L1_utf8bom_srt: ", out_L1_utf8bom_srt)
     log("out_L2_utf8bom_srt: ", out_L2_utf8bom_srt)
-    log("levels: ", levels)
+
+    setSrtTemplates(L1_color, L1_size, L2_color, L2_size)
 
     # try to decode and save as utf8-bom
     L1_srt_bom = L1_srt + ".utf8bom"

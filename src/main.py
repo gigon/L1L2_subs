@@ -33,7 +33,10 @@ Show the french translation of every line whose:
 The program first synchronizes the L1 srt subtitle timings to match the L2 srt subtitles.
 Add --save_sync to save the L1 srt and L2 srt with synchronized timings.
 
-$ python ./src/makeL1L2.py "path-to/movie.subs.fr.srt" "path-to/movie.subs.en.srt" --out_srt "path-to/movie.subs.en-B1-fr.srt" --level 3 --save_sync
+Add --L1_color yellow and L1_size 11 to format the L1 subtitles.
+Add --L2_color yellow and L2_size 11 to format the L2 subtitles.
+
+$ python ./src/makeL1L2.py "path-to/movie.subs.fr.srt" "path-to/movie.subs.en.srt" --out_srt "path-to/movie.subs.en-B1-fr.srt" --level 3 --save_sync --L2_color yellow
 
 """
 
@@ -69,6 +72,10 @@ def main():
     parser.add_argument("--level", default="1,2,3,4,5,6", nargs="?", help="comma separated levels [1-6] to filter by (Will generate one srt for each level)")
     parser.add_argument("--show_L2", nargs="?", default="when_no_L1", help="Show L2 subtitles (when_no_L1, no, yes)")
     parser.add_argument("--encoding", nargs="?", default="utf-8-sig", help="Encoding of merged files (default=utf-8-sig)")    
+    parser.add_argument("--L1_color", nargs="?", help="L1 subtitles color (yellow, green or #fefefe etc.)")
+    parser.add_argument("--L1_size", nargs="?", help="L1 subtitles font size (11, 14 etc.)")
+    parser.add_argument("--L2_color", nargs="?", help="L2 subtitles color (yellow, green or #fefefe etc.)")
+    parser.add_argument("--L2_size", nargs="?", help="L2 subtitles font size (11, 14 etc.)")
     parser.add_argument("--save_sync", type=str2bool, nargs='?', const=True, default=False, help="save the synced srt files.")
     parser.add_argument("--save_boms", type=str2bool, nargs='?', const=True, default=False, help="save L1 srt fileconverted to utf8-BOM.")
 
@@ -120,7 +127,9 @@ def main():
             format(show_L2))
         sys.exit(1)        
 
-    makeL1L2(args.L1_srt[0], args.L2_srt[0], out_srt, levels, args.save_sync, out_L1_utf8bom_srt, out_L2_utf8bom_srt, show_L2, args.encoding)
+    makeL1L2(args.L1_srt[0], args.L2_srt[0], out_srt, levels, args.save_sync,\
+        out_L1_utf8bom_srt, out_L2_utf8bom_srt, show_L2, args.encoding,\
+        args.L1_color, args.L1_size, args.L2_color, args.L2_size)
 
 if __name__ == '__main__':
     main()
