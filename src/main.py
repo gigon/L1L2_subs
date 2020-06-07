@@ -69,7 +69,7 @@ def main():
     parser.add_argument("L1_srt", nargs=1, help="SRT file in L1.")
     parser.add_argument("L2_srt", nargs=1, help="SRT file in L2.")
     parser.add_argument("--out_srt", nargs="?", help="output SRT file. Folder will be created if not exists")
-    parser.add_argument("--level", default="1,2,3,4,5,6", nargs="?", help="comma separated levels [1-6] to filter by (Will generate one srt for each level)")
+    parser.add_argument("--level", default="1,2,3,4,5,6", nargs="?", help="comma separated levels [0-6] to filter by (Will generate one srt for each level). 0 is no-level i.e. L1 will be displayed.")
     parser.add_argument("--show_L2", nargs="?", default="when_no_L1", help="Show L2 subtitles (when_no_L1, no, yes)")
     parser.add_argument("--encoding", nargs="?", default="utf-8-sig", help="Encoding of merged files (default=utf-8-sig)")    
     parser.add_argument("--L1_color", nargs="?", help="L1 subtitles color (yellow, green or #fefefe etc.)")
@@ -91,9 +91,9 @@ def main():
     if args.level:
         levels = args.level.split(',')
         for lev in levels:            
-            if not lev in ("1", "2", "3", "4", "5", "6"):
+            if not lev in ("0", "1", "2", "3", "4", "5", "6"):
                 print("Passed invalid level '{}'."
-                    " Acceptable values are in the range 1 (lowest) to 6 (highest).".
+                    " Acceptable values are in the range 0 (none) through 1 (lowest) to 6 (highest).".
                     format(lev))
                 sys.exit(1)        
         

@@ -89,6 +89,9 @@ def joinLines(txtsubL2, txtsubL1):
 # Checks line num of chars, flesch-kincaid grade level, CEFR level
 # Given max levels to check against, disregards max level <= 0 
 def isTextNotAboveLevel(level, cefr_level, flesh_kincade_grade, num_words, lineLen):
+    if level == "0": # no level - display all L1 lines
+        return False
+
     level_criteria = level_criterias[level]
 
     is_readable = True
@@ -190,7 +193,7 @@ def makeL1L2(L1_srt, L2_srt, out_srt, levels, save_sync, out_L1_utf8bom_srt, out
         processSub(subs_L1[i], subs_L2[i], levels, outs, removed_lines, show_L2)
 
     for level in levels:
-        summary = "level_criteria: {}. Hidden L1 lines: {} out of {}".format(level_criterias[level], removed_lines[level], len(subs_L2))
+        summary = "level_criteria: {}. Hidden L1 lines: {} out of {}".format(level_criterias[level] if level != "0" else 'none', removed_lines[level], len(subs_L2))
         summaryItem = SubRipItem(1, {'milliseconds': 0}, {'milliseconds': 1}, summary)
         outs[level].append(summaryItem)
         outs[level].clean_indexes()        

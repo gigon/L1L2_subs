@@ -16,6 +16,19 @@ Add --save-boms flag to save these intermediate files.
 
 The program then attempts to synchronize the 1st input file (L1) subtitle times to the 2nd file (L2).   
 
+## Levels
+The levels 1-6 from lowest to highest, are based on CEFR grade and Flesh-Kincade difficulty of each sub line, in addition to number of characters and number of words:       
+1: CEFR: A1, FK: 4, max characters: 30, max words: 8
+2: CEFR: A2, FK: 5, max characters: 40, max words: 9
+3: CEFR: B1, FK: 6, max characters: 50, max words: 11
+4: CEFR: B2, FK: 7, max characters: 50, max words: 11
+5: CEFR: C1, FK: 8, max characters: 60, max words: 12
+6: CEFR: C2, FK: 9, max characters: 70, max words: 14
+
+Set --level 2,4 to generate srts for these levels.   
+Set --level 0 to generate an srt for no level i.e. all lines in L1 will be shown (useful e.g. to mix L1 and l2)
+The default value is 1,2,3,4,5,6.
+
 Add --L1_color yellow and L1_size 11 to format the L1 subtitles.
 Add --L2_color yellow and L2_size 11 to format the L2 subtitles.
 
