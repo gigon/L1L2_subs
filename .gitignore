@@ -121,3 +121,5 @@ dmypy.json
 # End of https://www.gitignore.io/api/visualstudiocode,python
 
 _n_*.*
+
+resources/nltk_data

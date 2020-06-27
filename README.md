@@ -41,11 +41,30 @@ Add --encoding flag to save the result in a specific encoding e.g. "--encoding u
 
 ## How-to
 
-$ python ./src/main.py "/path-to/movie.subs.fr.srt" "/path-to/movie.subs.en.srt" --level 3,5 --save_sync
+In order to run in a Python virtual environment, install pipenv.   
+Run this to get the packages and spacy english data file:
+```sh
+pipenv install 
+pipenv run python -m spacy download en
+```
+Run the program:
+```
+$ pipenv run python ./src/main.py "/path-to/movie.subs.fr.srt" "/path-to/movie.subs.en.srt" --level 3,5 --save_sync
+```
 
 ## Build an installation
 ```
 pipenv run setup.py install
+```
+
+## Build win exe with pyinstaller:
+
+Replace file in %appdata%\..\.virtualenvs\L1L2_subs-75Ang_a8\Lib\site-packages\PyInstaller\hooks\hook-nltk.py  
+with pyinstaller-hooks-to-replace\hook-nltk.py
+
+Use the following script if you installed pipenv as python virtual envirnment.  
+```
+./run-pyinstaller.sh
 ```
 
 ## Notes
@@ -56,8 +75,3 @@ Otherwise the results are unexpected.
 
 * Installation on Windows  
 On windows 10, if textacy fails to install, try to install Win10 Sdk.   
-
-* Run this command (TBD):
-```
-python -m spacy download en_core_web_sm
-```

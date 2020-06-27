@@ -8,6 +8,16 @@ from textblob import TextBlob
 from textacy import preprocessing
 import textacy as textacy
 
+# These lines are just for issue with pyinstaller
+# https://stackoverflow.com/questions/37144170/how-to-use-pyinstaller-to-completely-pack-all-the-necessary-library
+# I had to copy nltk_data from %appdata%/roaming/nltk_data to ../resources/nltk_data
+# and add these lines: 
+basedir = os.path.abspath(os.path.dirname(__file__))
+data_path = os.path.abspath(basedir + '\\..\\resources\\nltk_data')
+import nltk
+nltk.data.path.append(data_path)
+#-------------
+
 # this is a pointer to the module object instance itself.
 this = sys.modules[__name__]
 # we can explicitly make assignments on this

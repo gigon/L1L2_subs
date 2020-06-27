@@ -10,7 +10,8 @@ pylint = "*"
 pysrt = "*"
 textblob = "*"
 textacy = "*"
-setuptools = "*"
+setuptools = "<45.0.0"
+pyinstaller = "*"
 
 [requires]
 python_version = "3.8"
