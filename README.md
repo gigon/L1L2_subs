@@ -59,8 +59,10 @@ pipenv run setup.py install
 
 ## Build win exe with pyinstaller:
 
-Replace file in %appdata%\..\.virtualenvs\L1L2_subs-75Ang_a8\Lib\site-packages\PyInstaller\hooks\hook-nltk.py  
-with pyinstaller-hooks-to-replace\hook-nltk.py
+Replace file in %appdata%\..\.virtualenvs\L1L2_subs-75Ang_a8\Lib\site-packages\PyInstaller\hooks\
+with files in pyinstaller-hooks-to-replace\ (e.g. hook-nltk.py)
+
+Copy nltk_data from %appdata%/roaming/nltk_data to ../resources/nltk_data (on Mac source dir will be different)
 
 Use the following script if you installed pipenv as python virtual envirnment.  
 ```

@@ -8,12 +8,16 @@ from textblob import TextBlob
 from textacy import preprocessing
 import textacy as textacy
 
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(os.path.dirname(__file__))+"\\..\\"))
+    return os.path.join(base_path, relative_path)
+
 # These lines are just for issue with pyinstaller
 # https://stackoverflow.com/questions/37144170/how-to-use-pyinstaller-to-completely-pack-all-the-necessary-library
 # I had to copy nltk_data from %appdata%/roaming/nltk_data to ../resources/nltk_data
 # and add these lines: 
-basedir = os.path.abspath(os.path.dirname(__file__))
-data_path = os.path.abspath(basedir + '\\..\\resources\\nltk_data')
+data_path = resource_path("resources\\nltk_data")
 import nltk
 nltk.data.path.append(data_path)
 #-------------
@@ -30,9 +34,8 @@ def loadSpacyLangEn():
 
 def loadCefrList():
     # open CEFR vocabulary file for english
-    scriptDir = os.path.dirname(__file__) 
-    relPath = "../resources/cefr/cefr_vocab_en.json"
-    cefr_file = open(os.path.join(scriptDir, relPath))
+    cefr_json_file_path = resource_path('resources\\cefr\\cefr_vocab_en.json')
+    cefr_file = open(cefr_json_file_path)
     cefr_json = json.load(cefr_file)
     cefr_file.close()
     return cefr_json
