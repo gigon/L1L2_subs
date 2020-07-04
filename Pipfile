@@ -12,6 +12,7 @@ textblob = "*"
 textacy = "*"
 setuptools = "<45.0.0"
 pyinstaller = "*"
+en-core-web-sm = "2.3.0"
 
 [requires]
 python_version = "3.8"
