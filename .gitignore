@@ -123,3 +123,4 @@ dmypy.json
 _n_*.*
 
 resources/nltk_data
+resources/media/elephants_dream/*.utf8bom
