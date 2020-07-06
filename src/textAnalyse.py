@@ -8,6 +8,10 @@ from textblob import TextBlob
 from textacy import preprocessing
 import textacy as textacy
 
+# this is required just so pyinstaller includes this module used by spacy:
+import en_core_web_sm
+import spacy
+
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
     base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(os.path.dirname(__file__))+"\\..\\"))
@@ -29,7 +33,8 @@ this.cefr_data = None
 this.spacy_en = None
 
 def loadSpacyLangEn():
-    spacy_en = textacy.load_spacy_lang("en", disable=("parser",))
+    #spacy_en = textacy.load_spacy_lang("en_core_web_sm", disable=("parser",))
+    spacy_en = spacy.load("en_core_web_sm", disable=("parser",))
     return spacy_en
 
 def loadCefrList():

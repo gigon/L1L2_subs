@@ -1,10 +1,13 @@
 # HOOK FILE FOR SPACY
 from PyInstaller.utils.hooks import collect_all
+import spacy
 
 # ----------------------------- SPACY -----------------------------
 data = collect_all('spacy')
 
 datas = data[0]
+datas.append((spacy.util.get_data_path(), 'spacy/data'))
+
 binaries = data[1]
 hiddenimports = data[2]
 

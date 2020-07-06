@@ -45,7 +45,7 @@ In order to run in a Python virtual environment, install pipenv.
 Run this to get the packages and spacy english data file:
 ```sh
 pipenv install 
-pipenv run python -m spacy download en
+pipenv run python -m spacy download en_core_web_sm
 ```
 Run the program:
 ```

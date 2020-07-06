@@ -1,5 +1,5 @@
 
-rm -rf dist/*
+rm -rf dist/* build/*
 
 pipenv run pyinstaller L1L2_subs.spec
 
