@@ -13,7 +13,7 @@ datas.extend([(path.join(site_packages, 'pyphen\\dictionaries'), 'pyphen\\dictio
 datas.extend([(path.join(site_packages, 'en_core_web_sm\\en_core_web_sm-2.3.0\\tokenizer'), 'en_core_web_sm\\')])
 datas.extend([(path.join(site_packages, 'en_core_web_sm\\en_core_web_sm-2.3.0\\ner'), 'en_core_web_sm\\ner')])
 datas.extend([(path.join(site_packages, 'en_core_web_sm\\en_core_web_sm-2.3.0\\tagger'), 'en_core_web_sm\\tagger')])
-datas.extend([('runExe.bat, '.')])
+datas.extend([('runExe.bat', '.')])
 
 block_cipher = None
 
