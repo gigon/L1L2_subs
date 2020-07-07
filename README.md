@@ -16,6 +16,57 @@ Add --save-boms flag to save these intermediate files.
 
 The program then attempts to synchronize the 1st input file (L1) subtitle times to the 2nd file (L2).   
 
+## Example
+
+Original french (L1) subtitles:
+```
+59
+00:07:27,542 --> 00:07:30,333
+Je ne vois pas|parce qu’il n’y a rien ici.
+
+60
+00:07:31,500 --> 00:07:35,333
+Pourquoi je confierais ma vie|à quelque chose qui n’est pas là ?
+
+61
+00:07:35,417 --> 00:07:36,833
+Tu peux répondre à ça ?
+```
+
+Original english (L2) subtitles:
+```
+60
+00:07:27,056 --> 00:07:29,970
+I don't see because there's nothing there.
+
+61
+00:07:31,055 --> 00:07:34,965
+And why should I trust my
+life to something that isn't there?
+
+62
+00:07:35,055 --> 00:07:36,926
+Well can you tell me that?
+```
+
+Result (elephant.fr-4.srt).
+lines with CEFR level 4 or higher remain in french (L1)   
+while simpler lines are shown in english (L2).
+All the subtitles are synchronized by L2 timing cues: 
+```
+61
+00:07:27,056 --> 00:07:29,970
+I don't see because there's nothing there.
+
+62
+00:07:31,055 --> 00:07:34,965
+Pourquoi je confierais ma vie|à quelque chose qui n’est pas là ?
+
+63
+00:07:35,055 --> 00:07:36,926
+Well can you tell me that?
+```
+
 ## Levels
 The levels 1-6 from lowest to highest, are based on CEFR grade and Flesh-Kincade difficulty of each sub line, in addition to number of characters and number of words:       
 1: CEFR: A1, FK: 4, max characters: 30, max words: 8
